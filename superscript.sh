@@ -1,14 +1,14 @@
 #!/usr/bin/env zsh
-echo "PE Illumina FASTQ to biom superscript alpha v0.2.1"
+echo "PE Illumina FASTQ to biom superscript alpha v0.2.2"
 echo "--------------------------------------------------------"
 echo "Dependencies:"
 echo "Currently using environment path in **zshrc**"
-echo "mothur" from www.mothur.org"
+echo "mothur from www.mothur.org"
 echo "uc2otutab.py from www.drive5.com"
 echo "biom-format from biom-format.org"
 echo "usearch8 from www.drive5.com"
 echo "--------------------------------------------------------" 
-echo "This script Python 2 due to the use of uc2otutab.py from drive5"
+echo "This script requires Python 2 due to the use of uc2otutab.py from drive5"
 echo "Place all and only the paired-end Illumina files of the this project in this local folder."
 echo "--------------------------------------------------------" 
 echo "Enter the project name that will be given to the output files as an identifier:"
@@ -74,9 +74,11 @@ usearch8 -usearch_global "${project}_abundance.trim.fasta" -db "${project}_rep_n
 
 #-------- End of abundance calculation section ----------------------------
 
-echo "Activating python2 environment for .uc --> txt script" 
+# echo "Activating python2 environment for .uc --> txt script" 
+# This is dependent on my anaconda python2 environment set up, uncomment if you have an environment called python2
+# source activate python2
+
 uc2otutab.py "${project}_readmap.uc" > "${project}_readmap.txt"
 
 echo "Output HDF5 biom OTU table"
 biom convert -i "${project}_readmap.txt" -o "${project}.biom" --table-type="OTU table" --to-hdf5
-
