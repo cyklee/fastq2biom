@@ -12,11 +12,11 @@ Developed in Z-shell (zsh)
 
 ## Dependencies:
 
-The following commands need to be in the $PATH variable, and named as such:"
-* mothur - from www.mothur.org"
-* uc2otutab.py - from www.drive5.com"
-* biom - from biom-format.org"
-* usearch8 - from www.drive5.com"
+The following commands need to be in the $PATH variable, and named as such:
+* mothur - from http://www.mothur.org
+* uc2otutab.py - from http://www.drive5.com
+* biom - from http://biom-format.org
+* usearch8 - from http://www.drive5.com
 
 This script requires Python 2 due to the use of uc2otutab.py from drive5
 
