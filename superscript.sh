@@ -1,14 +1,15 @@
 #!/usr/bin/env zsh
 # Prints welcome message and takes project name
 function welcome {
-echo "PE Illumina FASTQ to biom superscript alpha v0.3"
+echo "PE Illumina FASTQ to biom superscript alpha v0.4"
+echo "Developed in Z-shell (zsh)"
 echo "--------------------------------------------------------"
 echo "Dependencies:"
-echo "Currently using environment path in **zshrc**"
-echo "mothur from www.mothur.org"
-echo "uc2otutab.py from www.drive5.com"
-echo "biom-format from biom-format.org"
-echo "usearch8 from www.drive5.com"
+echo "The following commands need to be in the $PATH variable, and named as such:"
+echo "mothur - from www.mothur.org"
+echo "uc2otutab.py - from www.drive5.com"
+echo "biom - from biom-format.org"
+echo "usearch8 - from www.drive5.com"
 echo "--------------------------------------------------------" 
 echo "This script requires Python 2 due to the use of uc2otutab.py from drive5"
 echo "Place all and only the paired-end Illumina files of the this project in this local folder."
