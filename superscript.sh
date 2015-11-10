@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
-echo "PE Illumina FASTQ to biom superscript alpha v0.2.2"
+# Prints welcome message and takes project name
+function welcome {
+echo "PE Illumina FASTQ to biom superscript alpha v0.3"
 echo "--------------------------------------------------------"
 echo "Dependencies:"
 echo "Currently using environment path in **zshrc**"
@@ -14,7 +16,10 @@ echo "--------------------------------------------------------"
 echo "Enter the project name that will be given to the output files as an identifier:"
 read project
 echo "Project name: $project"
+}
 
+# Picks representative OTU sequences using usearch8 and mothur, they need to be in $PATH
+function otu {
 echo "Merging reads..."
 for file in *R1_001.fastq
 do
@@ -50,9 +55,10 @@ usearch8 -cluster_otus "${project}_seq_derep2.fasta"  -otus "${project}_rep_set.
 
 echo "Header stripping..."
 fasta_number.py "${project}_rep_set.fasta" "OTU_" > "${project}_rep_numbered.fasta"
+}
 
-#------- Abundance calculation by using unfiltered but trimmed reads ------
-
+#Abundance calculation by using unfiltered but trimmed reads
+function abundance {
 echo "Generating unfiltered reads for abundance information..."
 
 for file in *merged.fastq; do
@@ -71,14 +77,19 @@ mothur "#trim.seqs(fasta="${project}_abundance.fasta", minlength=200, maxlength=
 
 echo "Mapping the abundance data..."
 usearch8 -usearch_global "${project}_abundance.trim.fasta" -db "${project}_rep_numbered.fasta" -id 0.97 -strand plus -uc "${project}_readmap.uc"
+}
 
-#-------- End of abundance calculation section ----------------------------
+welcome
+otu
+abundance
 
-# echo "Activating python2 environment for .uc --> txt script" 
-# This is dependent on my anaconda python2 environment set up, uncomment if you have an environment called python2
-# source activate python2
+# This is dependent on my anaconda python2 environment set up, rename to your env name
+echo "Activating python2 environment for .uc --> txt script" 
+source activate python2
 
+# convert uc output to "classic" OTU table
 uc2otutab.py "${project}_readmap.uc" > "${project}_readmap.txt"
 
+# convert "classic" otu table to biom file
 echo "Output HDF5 biom OTU table"
 biom convert -i "${project}_readmap.txt" -o "${project}.biom" --table-type="OTU table" --to-hdf5
