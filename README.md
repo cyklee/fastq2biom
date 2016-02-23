@@ -20,4 +20,9 @@ The following commands need to be in the $PATH variable, and named as such:
 
 This script requires Python 2 due to the use of uc2otutab.py from drive5
 
+## TODO:
+* Report sequence size distribution (perhaps via mothur summary.seqs?)
+* Perhaps use the size distribution to automate trim.seq parameters (e.g. adjust to capture a portion of the distribution, within reason)
+* Report pre-processing read counts vs. post-processing read counts
+
 
