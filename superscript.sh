@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 # Prints welcome message and takes project name
 welcome() {
-echo "PE Illumina FASTQ to biom superscript alpha v1.0"
+echo "PE Illumina FASTQ to biom superscript alpha v1.1"
 echo "Developed for Z-shell (zsh)"
 echo "--------------------------------------------------------"
 echo "Dependencies:"
@@ -18,6 +18,8 @@ echo "--------------------------------------------------------"
 echo "Enter the project name that will be given to the output files as an identifier:"
 read project
 echo "Project name: $project"
+read -q "response?Do you want to conduct downstream QIIME analysis? [y/N]"
+printf "\n"
 }
 # Picks representative OTU sequences using usearch8 and mothur, they need to be in $PATH
 otu() {
@@ -87,10 +89,14 @@ mv unfiltered_log.txt log/
 mv merge_log.txt log/
 mv filter_log.txt log/
 
-mkdir sequences
-mv *.fasta sequences/
-mv *.fastq sequences/
-cp "sequences/${project}_rep_numbered.fasta" ./
+mkdir original_sequences
+mv *R1*fastq original_sequences/
+mv *R2*fastq original_sequences/
+
+mkdir intermediary_sequences
+mv *.fasta intermediary_sequences/
+mv *.fastq intermediary_sequences/
+cp "intermediary_sequences/${project}_rep_numbered.fasta" ./
 }
 
 # Optional QIIME analysis, these won't work with non-16S data (e.g., ITS, 18S, rbcL)
@@ -111,9 +117,9 @@ echo "Conducting three steps to produce a phylogenetic tree, for phylogeny-based
 echo "Aligning representative OTU sequence."
 align_seqs.py -i "${project}_rep_numbered.fasta"
 echo "Filtering the alignment."
-filter_alignment.py -i "pynast_aligned/${project}_rep_numbered_aligned.fasta"
+filter_alignment.py -i "pynast_aligned/${project}_rep_numbered_aligned.fasta" -o pynast_aligned/
 echo "Making the phylogenetic tree."
-make_phylogeny.py -i "${project}_rep_numbered_aligned_pfiltered.fasta"
+make_phylogeny.py -i "pynast_aligned/${project}_rep_numbered_aligned_pfiltered.fasta"
 
 echo "All done! Now exit python2 environment."
 source deactivate
@@ -142,10 +148,9 @@ biom convert -i "${project}_readmap.txt" -o "${project}.biom" --table-type="OTU 
 echo "Deactivate python2 environment, may be activated again for QIIME downstream."
 source deactivate
 
-read -q "response?Do you want to conduct downstream QIIME analysis? [y/N] "
 if [[ "$response" =~ ^[Yy]$ ]]
 then
 qiime
 fi
 
-echo "Analysis completed. Hope you enjoyed your coffee!"
+
