@@ -99,6 +99,27 @@ mv *.fastq intermediary_sequences/
 cp "intermediary_sequences/${project}_rep_numbered.fasta" ./
 }
 
+biom_conversion() {
+# Make biom file from classic OTU table
+# This is dependent on my anaconda python2 environment set up, rename to your env name
+echo "Activating python2 environment for .uc --> txt script" 
+source activate python2
+
+
+# I would love to get this section into a funciton, but this script below
+# won't work within the scope of a shell function for some reason (will get stuck in a loop)
+echo "Converting uc output to classic OTU table"
+uc2otutab.py "${project}_readmap.uc" > "${project}_readmap.txt"
+
+# convert "classic" otu table to biom file
+echo "Output HDF5 biom OTU table"
+biom convert -i "${project}_readmap.txt" -o "${project}.biom" --table-type="OTU table" --to-hdf5
+
+echo "Deactivate python2 environment, may be activated again for QIIME downstream."
+source deactivate
+}
+
+
 # Optional QIIME analysis, these won't work with non-16S data (e.g., ITS, 18S, rbcL)
 qiime() {
 echo "Activating python2 envrionment for QIIME..."
@@ -129,24 +150,7 @@ welcome
 otu
 abundance
 cleanup
-
-# Make biom file from classic OTU table
-# This is dependent on my anaconda python2 environment set up, rename to your env name
-echo "Activating python2 environment for .uc --> txt script" 
-source activate python2
-
-
-# I would love to get this section into a funciton, but this script below
-# won't work within the scope of a shell function for some reason (will get stuck in a loop)
-echo "Converting uc output to classic OTU table"
-uc2otutab.py "${project}_readmap.uc" > "${project}_readmap.txt"
-
-# convert "classic" otu table to biom file
-echo "Output HDF5 biom OTU table"
-biom convert -i "${project}_readmap.txt" -o "${project}.biom" --table-type="OTU table" --to-hdf5
-
-echo "Deactivate python2 environment, may be activated again for QIIME downstream."
-source deactivate
+biom_conversion
 
 if [[ "$response" =~ ^[Yy]$ ]]
 then
