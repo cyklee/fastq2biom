@@ -8,7 +8,7 @@
                            |_|                            
 ```
 # fastq2biom
-**PE Illumina FASTQ to biom superscript alpha v1.0**
+**PE Illumina FASTQ to biom superscript Beta v1.1**
 
 A draft Z shell script automating steps processing Illumina paired-end FASTQ to a BIOM format.
 Developed in Z-shell (zsh).
@@ -37,8 +37,12 @@ This script requires Python 2 due to the use of uc2otutab.py from drive5 and QII
 
 ## TODO:
 * Generate FASTQC report of the input FASTQ files.
-* Report sequence size distribution (perhaps via mothur summary.seqs?).
+* Report sequence size distribution (perhaps via mothur summary.seqs?) <-- R script written
 * Perhaps use the size distribution to calculate trim.seq parameters (e.g. adjust to capture a portion of the distribution, within reason).
-* Report pre-processing read counts vs. post-processing read counts.
+* Report pre-processing read counts vs. post-processing read counts <- simple FASTQ counting script availble perhaps vs. merged read count *2 ?
+
+## Issues
+* Log files need to also log files being worked on (e.g. during merging) so they can be linked to the diagnostic output
+
 
 
