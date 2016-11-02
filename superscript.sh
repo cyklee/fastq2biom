@@ -31,13 +31,14 @@ do
         sampleID=$(echo "$file" | cut -d "_" -f1) # "_" as delimiter
         usearch8 -fastq_mergepairs $file -reverse ${file%R1_001.fastq}R2_001.fastq -fastqout "${sampleID}_merged.fastq"
     fi
-done &> merge_log.txt
+done &> merge_log.txt # The shell report redirect may be replaced with -report switch (introduced in usearch v8.1.1859)
 
 echo "Convert FASTQ to FASTA with 1.0 max expected error..."
 for file in *merged.fastq; do
     sampleID=$(echo "$file" | cut -d "_" -f1)
     usearch8 -fastq_filter "${sampleID}_merged.fastq" -fastaout "${sampleID}_filtered.fasta" -fastq_maxee 1.0
 done &> filter_log.txt
+# No good inbuilt report function in usearch yet, but should list filtered filename in the collated report for traceability.
 
 echo "FASTA header renaming..."
 for filename in $(ls *_filtered.fasta); do 
