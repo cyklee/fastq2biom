@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 # Prints welcome message and takes project name
 welcome() {
-echo "PE Illumina FASTQ to biom superscript alpha v1.1"
+echo "PE Illumina FASTQ to biom superscript alpha v1.2"
 echo "Developed for Z-shell (zsh)"
 echo "--------------------------------------------------------"
 echo "Dependencies:"
@@ -19,6 +19,7 @@ echo "Enter the project name that will be given to the output files as an identi
 read project
 echo "Project name: $project"
 read -q "response?Do you want to conduct downstream QIIME analysis? [y/N]"
+# instead of interactive Q/A perhaps convert these into switches (-q for qiime and -a for alpha diversity mode (include singleton))
 printf "\n"
 }
 # Picks representative OTU sequences using usearch8 and mothur, they need to be in $PATH
@@ -105,9 +106,6 @@ biom_conversion() {
 echo "Activating python2 environment for .uc --> txt script" 
 source activate python2
 
-
-# I would love to get this section into a funciton, but this script below
-# won't work within the scope of a shell function for some reason (will get stuck in a loop)
 echo "Converting uc output to classic OTU table"
 uc2otutab.py "${project}_readmap.uc" > "${project}_readmap.txt"
 
