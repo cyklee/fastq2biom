@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 # Prints welcome message and takes project name
 welcome() {
-echo "PE Illumina FASTQ to biom superscript for USEARCH v8.x"
+echo "PE Illumina FASTQ to biom superscript for USEARCH v8.x - legacy script"
 echo "Please note due to command changes, this script will NOT work with <v8, v9, or v10."
 echo "Developed for Z-shell (zsh)"
 echo "--------------------------------------------------------"
