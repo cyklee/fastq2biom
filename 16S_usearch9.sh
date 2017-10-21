@@ -19,6 +19,8 @@ echo "Enter the project name that will be given to the output files as an identi
 read project
 echo $(date +%Y-%m-%d\ %H:%M) "Project name: $project"
 printf "\n"
+read -q "relaxed?Do you want to relax the FASTQ merge pair criteria? [y/N]"
+printf "\n"
 read -q "qiime?Do you want to conduct downstream QIIME analysis? [y/N]"
 printf "\n"
 read -q "alpha?Do you want to keep singletons for alpha diversity analysis? [y/N]"
@@ -29,12 +31,24 @@ printf "\n"
 # Picks representative OTU sequences using usearch9 and mothur, they need to be in $PATH
 otu() {
 echo $(date +%Y-%m-%d\ %H:%M) "Merging reads with 5 maximum mismatches or 5% maximum mismatch in the overlapped region."
-for file in *R1_001.fastq; do
-	if [ -f "$file" ]; then
-		sampleID=$(echo "$file" | cut -d "_" -f1) # "_" as delimiter
-		usearch9 -fastq_mergepairs $file -fastqout "${sampleID}_merged.fastq" -log "${sampleID}_merge.log" -fastq_maxdiffs 10 -fastq_maxdiffpct 10 -fastq_trunctail 5
-	fi
-done
+
+if [[ "$relaxed" =~^[Yy]$ ]]; then
+	echo "Running relaxed paired-end FASTQ merging  (-fastq_maxdiffs 10 -fastq_maxdiffpct 10 -fastq_trunctail 5)"
+	for file in *R1_001.fastq; do
+		if [ -f "$file" ]; then
+			sampleID=$(echo "$file" | cut -d "_" -f1) # "_" as delimiter
+			usearch9 -fastq_mergepairs $file -fastqout "${sampleID}_merged.fastq" -log "${sampleID}_merge.log"
+		fi
+	done
+else
+	echo "Running standard paired-end FASTQ merging"
+	for file in *R1_001.fastq; do
+		if [ -f "$file" ]; then
+			sampleID=$(echo "$file" | cut -d "_" -f1) # "_" as delimiter
+			usearch9 -fastq_mergepairs $file -fastqout "${sampleID}_merged.fastq" -log "${sampleID}_merge.log"
+		fi
+	done
+fi
 
 echo $(date +%Y-%m-%d\ %H:%M) "Converting FASTQ to FASTA with 1.0 max expected error."
 
@@ -116,7 +130,7 @@ source activate python2
 
 echo "Converting uc output to classic OTU table"
 uc2otutab.py "${project}_readmap.uc" > "${project}_readmap.txt"
-convert "classic" otu table to biom file
+#convert "classic" otu table to biom file
 echo "Output HDF5 biom OTU table"
 biom convert -i "${project}_readmap.txt" -o "${project}.biom" --table-type="OTU table" --to-hdf5
 
@@ -153,10 +167,10 @@ welcome
 otu
 
 if [[ "$denoise" =~ ^[Yy]$ ]]; then
-	echo "DEBUG: Running UNOISE"
+	echo "Running UNOISE ZOTU mode"
 	unoise
 else
-	echo "DEBUG: Running NORMAL anlaysis"
+	echo "Running 97% OTU clustering mode"
 	normal
 fi
 
