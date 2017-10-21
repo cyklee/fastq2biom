@@ -37,8 +37,10 @@ The following commands need to be in the $PATH variable, and named as such:
 
 ## TODO:
 * Generate FASTQC report of the input FASTQ files.
-* Report sequence size distribution (gist: cyklee/fastx_sequence_length.sh)
-* Report pre-processing read counts (simple grep for unfiltered fastq)
+* [fastx_learn](http://www.drive5.com/usearch/manual/cmd_fastx_learn.html) error rate determination.
+* Report sequence size distribution (gist: cyklee/fastx_sequence_length.sh).
+* Report pre-processing read counts (simple grep for unfiltered fastq).
+* Testing 16S_usearch10 script for unoise3 and singleton inclusion (alpha=Y).
 
 ## Possibly?
 * Snakemake?
