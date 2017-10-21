@@ -37,7 +37,7 @@ The following commands need to be in the $PATH variable, and named as such:
 
 ## TODO:
 * Generate FASTQC report of the input FASTQ files.
-* Report sequence size distribution (R script written)
+* Report sequence size distribution (gist: cyklee/fastx_sequence_length.sh)
 * Report pre-processing read counts (simple grep for unfiltered fastq)
 
 ## Possibly?
