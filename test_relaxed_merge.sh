@@ -32,7 +32,7 @@ echo $(date +%Y-%m-%d\ %H:%M) "Merging reads with 5 maximum mismatches or 5% max
 for file in *R1_001.fastq; do
 	if [ -f "$file" ]; then
 		sampleID=$(echo "$file" | cut -d "_" -f1) # "_" as delimiter
-		usearch9 -fastq_mergepairs $file -fastqout "${sampleID}_merged.fastq" -log "${sampleID}_merge.log"
+		usearch9 -fastq_mergepairs $file -fastqout "${sampleID}_merged.fastq" -log "${sampleID}_merge.log" -fastq_maxdiffs 10 -fastq_maxdiffpct 10 -fastq_trunctail 5
 	fi
 done
 
@@ -116,7 +116,7 @@ source activate python2
 
 echo "Converting uc output to classic OTU table"
 uc2otutab.py "${project}_readmap.uc" > "${project}_readmap.txt"
-#convert "classic" otu table to biom file
+convert "classic" otu table to biom file
 echo "Output HDF5 biom OTU table"
 biom convert -i "${project}_readmap.txt" -o "${project}.biom" --table-type="OTU table" --to-hdf5
 

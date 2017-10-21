@@ -10,6 +10,8 @@ read project
 echo $(date +%Y-%m-%d\ %H:%M) "Project name: $project"
 
 # Cut adaptor based on the sequences MRDNA used
+# Make sure these are the primer sequences in the data!w
+
 for i in *.fastq; do
 cutadapt -g CTTGGTCATTTAGAGGAAGTTAA -a GCATCGATGAAGAACGCAGC -n 2 $i -o ${i}.trimmed | tee ${i}.log;
 done
@@ -18,8 +20,8 @@ done
 # 2. convert FASTQ to unfiltered FASTA to map back onto the rep seq 
 for i in *.trimmed; do
 	sampleID=$(echo "$i" | cut -d "." -f1)
-	usearch9 -fastq_filter $i -fastq_maxee 1.0 -fastqout "${sampleID}_filtered.fastq" -relabel @ -log ${sampleID}_filtered.lg
-	usearch9 -fastq_filter $i -fastaout "${sampleID}_unfiltered.fasta" -relabel @ -log ${sampleID}_unfiltered.log
+	usearch9 -fastq_filter $i -fastq_maxee 1.0 -fastqout "${sampleID}_filtered.fastq" -sample $sampleID -log ${sampleID}_filtered.log
+	usearch9 -fastq_filter $i -fastaout "${sampleID}_unfiltered.fasta" -sample $sampleID -log ${sampleID}_unfiltered.log
 done
 
 # Concatenate the filtered reads into a single FASTQ file
@@ -33,16 +35,16 @@ for file in *_unfiltered.fasta; do
 done
 
 # Dereplicate
-usearch9 -fastx_uniques "${project}_sequence.fasta" -sizeout -fastaout "${project}_uniques.fasta" -log uniuqes.log
+usearch9 -fastx_uniques "${project}_sequence.fastq" -sizeout -fastaout "${project}_uniques.fasta" -log uniuqes.log
 
 # Some filtering
-mothur "#trim.seqs(fasta="${project}_uniques.fasta", minlength=200, maxlength=500, maxhomop=20"
+mothur "#trim.seqs(fasta="${project}_uniques.fasta", minlength=200, maxlength=500, maxhomop=20)"
 
 # OTU clustering
 usearch9 -cluster_otus "${project}_uniques.trim.fasta" -minsize 2 -otus "${project}_rep_numbered.fasta" -relabel OTU
 
 # Generating readmap and biom file
-usearch9 -usearch_global "${project}_unfiltered_seq.fasta" -db FC_rep_numbered.fasta -id 0.97 -strand plus -uc "${project}_readmap.uc" -biomout "${project}.biom"
+usearch9 -usearch_global "${project}_unfiltered_seq.fasta" -db "${project}_rep_numbered.fasta" -id 0.97 -strand plus -uc "${project}_readmap.uc" -biomout "${project}.biom"
 
 # USEARCH SINTAX taxonomy classification
 # The output can be integrated into analysis using RDPUtils R package
