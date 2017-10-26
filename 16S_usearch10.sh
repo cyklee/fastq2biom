@@ -10,7 +10,7 @@ echo "mothur - from www.mothur.org"
 echo "uc2otutab.py - from www.drive5.com"
 echo "biom - from biom-format.org"
 echo "usearch10 - from www.drive5.com"
-echo "Optional qiime integration (in Python 2)."
+echo "Optional qiime1 integration (in Python 2)."
 echo "--------------------------------------------------------" 
 echo "This script requires Python 2 due to the use of uc2otutab.py from drive5"
 echo "Place all and only the paired-end Illumina files of the this project in this local folder."
@@ -32,7 +32,7 @@ printf "\n"
 otu() {
 echo $(date +%Y-%m-%d\ %H:%M) "Merging reads with 5 maximum mismatches or 5% maximum mismatch in the overlapped region."
 
-if [[ "$relaxed" =~^[Yy]$ ]]; then
+if [[ "$relaxed" =~ ^[Yy]$ ]]; then
 	echo "Running relaxed paired-end FASTQ merging  (-fastq_maxdiffs 10 -fastq_maxdiffpct 10 -fastq_trunctail 5)"
 	for file in *R1_001.fastq; do
 		if [ -f "$file" ]; then
