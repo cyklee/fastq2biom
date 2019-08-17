@@ -7,6 +7,9 @@
   |_|  \_____(___/   \__)__  |_______)____/|_|\___/|_|_|_|
                            |_|                            
 ```
+
+* NOTE fastq2biom is no longer being maintained as I have migrated towards ASV-based approach with data2.
+
 # fastq2biom
 **PE Illumina FASTQ to biom superscript**
 
