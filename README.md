@@ -7,7 +7,7 @@
   |_|  \_____(___/   \__)__  |_______)____/|_|\___/|_|_|_|
                            |_|                            
 ```
-
+[![Project Status: Abandoned – Initial development has started, but there has not yet been a stable, usable release; the project has been abandoned and the author(s) do not intend on continuing development.](https://www.repostatus.org/badges/latest/abandoned.svg)](https://www.repostatus.org/#abandoned)
 * NOTE fastq2biom is no longer being maintained as I have migrated towards ASV-based approach with data2.
 
 # fastq2biom
